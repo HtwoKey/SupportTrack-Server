@@ -4,24 +4,26 @@ package com.yibei.supporttrack.entity.po;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.util.Date;
 
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
 @TableName("users")
-public class Users implements Serializable {
+public class User implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
-    @TableId(value = "id", type = IdType.AUTO)
+    @TableId(value = "user_id", type = IdType.AUTO)
     private Integer userId;
     /**
      * 用户名
@@ -43,10 +45,9 @@ public class Users implements Serializable {
      */
     private String fullName;
 
-    /**
-     * 部门ID
-     */
-    private Integer departmentId;
+    private String phone;
+
+    private String avatar;
 
     /**
      * 账号状态
@@ -57,10 +58,15 @@ public class Users implements Serializable {
     /**
      * 创建时间
      */
-    private LocalDateTime createdAt;
+    private Date createdAt;
 
     /**
      * 最后登录时间
      */
-    private LocalDateTime lastLogin;
+    private Date lastLogin;
+    /**
+     * 是否是管理员
+     */
+    @Builder.Default
+    private Boolean isAdmin = false;
 }
