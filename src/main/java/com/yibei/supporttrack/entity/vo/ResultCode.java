@@ -1,5 +1,8 @@
 package com.yibei.supporttrack.entity.vo;
 
+import lombok.Getter;
+
+@Getter
 public enum  ResultCode implements IErrorCode {
     /**
      *
@@ -22,11 +25,4 @@ public enum  ResultCode implements IErrorCode {
         this.message = message;
     }
 
-    public long getCode() {
-        return code;
-    }
-
-    public String getMessage() {
-        return message;
-    }
 }
