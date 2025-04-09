@@ -63,12 +63,6 @@ public class UserServiceImpl implements UserService {
         User user = getUserByUsername(username);
         if (user != null) {
             List<Permission> resourceList = permissionService.getPermissionList(user.getUserId());
-            try {
-                user.setLastLogin(new Date());
-                userMapper.updateById(user);
-            } catch (Exception e) {
-                log.error("更新最后登录时间失败: {}", e.getMessage());
-            }
             return new SystemUserDetails(user, resourceList);
         }
         throw new UsernameNotFoundException("用户不存在");
@@ -117,6 +111,10 @@ public class UserServiceImpl implements UserService {
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                     userDetails, null, userDetails.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+            // 更新最后登录时间
+            User user = getUserByUsername(username);
+            user.setLastLogin(new Date());
+            userMapper.updateById(user);
             return token;
         } else {
             Asserts.fail("密码不正确");

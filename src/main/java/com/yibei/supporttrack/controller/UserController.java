@@ -117,13 +117,16 @@ public class UserController {
 
     /**
      * 重置密码为123456
-     * @param id 用户id
+     * @param param 参数
      * @return 修改结果
      */
     @ResponseBody
     @PutMapping("/restPassword")
-    public CommonResult<?> restPassword(@RequestParam(value = "id") Integer id) {
-        int count = userService.restPassword(id);
+    public CommonResult<?> restPassword(@RequestBody UpdateUserParam param) {
+        if (param.getUserId() == null){
+            return CommonResult.failed("用户id不能为空");
+        }
+        int count = userService.restPassword(param.getUserId());
         if (count > 0) {
             return CommonResult.success(count);
         }
