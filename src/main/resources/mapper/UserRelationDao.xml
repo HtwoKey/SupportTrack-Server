@@ -7,9 +7,20 @@
             p.*
         FROM
             permission p
-                LEFT JOIN role_permission_relation rp ON p.id = rp.permission_id
-                LEFT JOIN user_role_relation ur ON ur.role_id = rm.role_id
+                LEFT JOIN role_permission_relations rp ON p.id = rp.permission_id
+                LEFT JOIN user_role_relations ur ON ur.role_id = rp.role_id
         WHERE
             ur.user_id = #{userId} and p.uri is not null
+    </select>
+
+    <select id="getUserMenuByUserId" resultType="com.yibei.supporttrack.entity.po.Permission">
+            SELECT
+                p.*
+            FROM
+                permission p
+                    LEFT JOIN role_permission_relations rp ON p.id = rp.permission_id
+                    LEFT JOIN user_role_relations ur ON ur.role_id = rp.role_id
+            WHERE
+                ur.user_id = #{userId}
     </select>
 </mapper>

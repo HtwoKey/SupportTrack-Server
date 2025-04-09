@@ -7,4 +7,6 @@ import java.util.List;
 public interface UserRelationDao {
 
     List<Permission> getUserPermissionByUserId(Integer userId);
+
+    List<Permission> getUserMenuByUserId(Integer userId);
 }

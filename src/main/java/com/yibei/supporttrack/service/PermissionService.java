@@ -25,5 +25,5 @@ public interface PermissionService {
 
     List<TreeSelect> buildMenuTreeSelect(List<Permission> menus);
 
-    List<Permission> getPermissionByUserId(Integer userId);
+    List<Permission> getMenuByUserId(Integer userId);
 }

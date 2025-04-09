@@ -159,7 +159,7 @@ public class PermissionServiceImpl implements PermissionService {
     }
 
     @Override
-    public List<Permission> getPermissionByUserId(Integer userId) {
+    public List<Permission> getMenuByUserId(Integer userId) {
         List<Permission> menuList;
         User user = userMapper.selectById(userId);
         // 判断是否是超级管理员
@@ -168,7 +168,7 @@ public class PermissionServiceImpl implements PermissionService {
             queryWrapper.orderByAsc("sort");
             menuList = permissionMapper.selectList(queryWrapper);
         }else {
-            menuList = userRelationDao.getUserPermissionByUserId(userId);
+            menuList = userRelationDao.getUserMenuByUserId(userId);
         }
         return getChildPerms(menuList, 0);
     }

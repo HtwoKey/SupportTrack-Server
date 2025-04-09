@@ -104,7 +104,7 @@ public class LoginController {
             if (user == null) {
                 return CommonResult.unauthorized(null);
             }
-            return CommonResult.success(menuService.buildMenus(menuService.getPermissionByUserId(user.getUserId())));
+            return CommonResult.success(menuService.buildMenus(menuService.getMenuByUserId(user.getUserId())));
         } catch (Exception e) {
             log.error("Error fetching user menu: {}", e.getMessage(), e);
             return CommonResult.failed("系统异常，请稍后再试");

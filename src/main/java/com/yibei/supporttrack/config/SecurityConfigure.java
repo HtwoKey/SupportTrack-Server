@@ -49,7 +49,7 @@ public class SecurityConfigure{
                 // 配置请求权限
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()  // 限定所有路径的OPTIONS
-                        .requestMatchers("/login").permitAll()
+                        .requestMatchers("/login", "/logout").permitAll()
                         .anyRequest().access(dynamicAccessDecisionManager))
                 // 安全特性配置
                 .csrf(AbstractHttpConfigurer::disable)
