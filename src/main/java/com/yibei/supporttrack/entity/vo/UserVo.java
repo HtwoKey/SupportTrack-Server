@@ -1,5 +1,7 @@
 package com.yibei.supporttrack.entity.vo;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.yibei.supporttrack.entity.po.UserRoleRelation;
 import lombok.Data;
 
@@ -13,7 +15,7 @@ public class UserVo implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
-
+    @TableId(value = "id", type = IdType.AUTO)
     private Integer userId;
     /**
      * 用户名
@@ -30,20 +32,9 @@ public class UserVo implements Serializable {
      */
     private String fullName;
 
-    /**
-     * 手机号码
-     */
     private String phone;
 
-    /**
-     * 头像
-     */
     private String avatar;
-
-    /**
-     * 部门ID
-     */
-    private Integer departmentId;
 
     /**
      * 账号状态
@@ -61,7 +52,7 @@ public class UserVo implements Serializable {
     private Date lastLogin;
 
     /**
-     * 角色关系
+     * 角色
      */
-    private List<UserRoleRelation> userRoleRelations;
+    private Integer[] roles;
 }

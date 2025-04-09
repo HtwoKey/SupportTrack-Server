@@ -10,9 +10,6 @@ public class AddUserParam {
     private Integer userId;
     @NotEmpty
     private String username;
-    @NotEmpty
-    private String password;
-
     @Email
     private String email;
     private String fullName;

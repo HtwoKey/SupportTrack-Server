@@ -45,20 +45,9 @@ public class User implements Serializable {
      */
     private String fullName;
 
-    /**
-     * 手机号码
-     */
     private String phone;
 
-    /**
-     * 头像URL
-     */
     private String avatar;
-
-    /**
-     * 部门ID
-     */
-    private Integer departmentId;
 
     /**
      * 账号状态

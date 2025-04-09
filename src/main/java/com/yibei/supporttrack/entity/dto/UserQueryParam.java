@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class UserQueryParam {
     private String keyword;
-    private Integer status;
+    private String status;
     private String startTime;
     private String endTime;
     private Integer pageSize;

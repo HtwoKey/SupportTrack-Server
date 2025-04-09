@@ -10,6 +10,7 @@ import com.yibei.supporttrack.entity.vo.UserVo;
 import com.yibei.supporttrack.service.PermissionService;
 import com.yibei.supporttrack.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.validation.annotation.Validated;
@@ -20,6 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @RestController
 @RequestMapping("")
 public class LoginController {
@@ -39,35 +41,50 @@ public class LoginController {
     @RequestMapping("/login")
     @ResponseBody
     public CommonResult<?> login(@Validated @RequestBody UserLoginParam userLoginParam) {
-        String token = userService.login(userLoginParam.getUsername(), userLoginParam.getPassword());
-        if (token == null) {
-            return CommonResult.validateFailed("用户名或密码错误");
+        try {
+            String token = userService.login(userLoginParam.getUsername(), userLoginParam.getPassword());
+            if (token == null) {
+                return CommonResult.validateFailed("用户名或密码错误");
+            }
+            return buildTokenResponse(token);
+        } catch (Exception e) {
+            log.error("Error during login: {}", e.getMessage(), e);
+            return CommonResult.failed("系统异常，请稍后再试");
         }
-        Map<String, String> tokenMap = new HashMap<>(2);
-        tokenMap.put("token", token);
-        tokenMap.put("tokenHead", tokenHead);
-        return CommonResult.success(tokenMap);
     }
 
     @GetMapping("/refreshToken")
     @ResponseBody
     public CommonResult<?> refreshToken(HttpServletRequest request) {
-        String token = request.getHeader(header);
-        String refreshToken = userService.refreshToken(token);
-        if (refreshToken == null) {
-            return CommonResult.failed("token已经过期！");
+        try {
+            String token = request.getHeader(header);
+            if (token == null || token.isEmpty()) {
+                return CommonResult.failed("无效的token");
+            }
+            String refreshToken = userService.refreshToken(token);
+            if (refreshToken == null) {
+                return CommonResult.failed("token已经过期！");
+            }
+            return buildTokenResponse(refreshToken);
+        } catch (Exception e) {
+            log.error("Error during token refresh: {}", e.getMessage(), e);
+            return CommonResult.failed("系统异常，请稍后再试");
         }
-        Map<String, String> tokenMap = new HashMap<>(2);
-        tokenMap.put("token", refreshToken);
-        tokenMap.put("tokenHead", tokenHead);
-        return CommonResult.success(tokenMap);
     }
     @PostMapping("/logout")
     @ResponseBody
     public CommonResult<?> logout(HttpServletRequest request) {
-        String token = request.getHeader(header);
-        userService.logout(token);
-        return CommonResult.success(null);
+        try {
+            String token = request.getHeader(header);
+            if (token == null || token.isEmpty()) {
+                return CommonResult.failed("无效的token");
+            }
+            userService.logout(token);
+            return CommonResult.success(null);
+        } catch (Exception e) {
+            log.error("Error during logout: {}", e.getMessage(), e);
+            return CommonResult.failed("系统异常，请稍后再试");
+        }
     }
 
     /**
@@ -77,13 +94,21 @@ public class LoginController {
      */
     @GetMapping("/auth/menu")
     @ResponseBody
-    public CommonResult<List<RouterVo>> getAdminUserMenu(Principal principal) {
-        if(principal==null){
+    public CommonResult<List<RouterVo>> getUserMenu(Principal principal) {
+        if (principal == null) {
             return CommonResult.unauthorized(null);
         }
-        String username = principal.getName();
-        User user = userService.getUserByUsername(username);
-        return CommonResult.success(menuService.buildMenus(menuService.getPermissionByUserId(user.getUserId())));
+        try {
+            String username = principal.getName();
+            User user = userService.getUserByUsername(username);
+            if (user == null) {
+                return CommonResult.unauthorized(null);
+            }
+            return CommonResult.success(menuService.buildMenus(menuService.getPermissionByUserId(user.getUserId())));
+        } catch (Exception e) {
+            log.error("Error fetching user menu: {}", e.getMessage(), e);
+            return CommonResult.failed("系统异常，请稍后再试");
+        }
     }
 
 
@@ -96,14 +121,22 @@ public class LoginController {
     @GetMapping("/auth/info")
     @ResponseBody
     public CommonResult<?> getAdminInfo(Principal principal) {
-        if(principal==null){
+        if (principal == null) {
             return CommonResult.unauthorized(null);
         }
-        String username = principal.getName();
-        User user = userService.getUserByUsername(username);
-        UserVo userVO = new UserVo();
-        BeanUtils.copyProperties(user, userVO);
-        return CommonResult.success(userVO);
+        try {
+            String username = principal.getName();
+            User user = userService.getUserByUsername(username);
+            if (user == null) {
+                return CommonResult.unauthorized(null);
+            }
+            UserVo userVO = new UserVo();
+            BeanUtils.copyProperties(user, userVO);
+            return CommonResult.success(userVO);
+        } catch (Exception e) {
+            log.error("Error fetching user info: {}", e.getMessage(), e);
+            return CommonResult.failed("系统异常，请稍后再试");
+        }
     }
 
     /**
@@ -111,19 +144,26 @@ public class LoginController {
      * @param userInfo 个人信息参数
      * @return 修改结果
      */
-    @ResponseBody
     @PutMapping("/auth/updateInfo")
-    public CommonResult<?> UpdateInfo(@Validated @RequestBody UpdateUserParam userInfo, Principal principal) {
-
-        String username = principal.getName();
-        if (!userInfo.getUsername().equals(username)){
-            return CommonResult.failed("提交参数不合法");
+    @ResponseBody
+    public CommonResult<?> updateInfo(@Validated @RequestBody UpdateUserParam userInfo, Principal principal) {
+        if (principal == null) {
+            return CommonResult.unauthorized(null);
         }
-        int status = userService.update(userInfo);
-        if (status > 0){
-            return CommonResult.success("ok");
+        try {
+            String username = principal.getName();
+            if (!userInfo.getUsername().equals(username)) {
+                return CommonResult.failed("提交参数不合法");
+            }
+            int status = userService.update(userInfo);
+            if (status > 0) {
+                return CommonResult.success("ok");
+            }
+            return CommonResult.failed("更新失败");
+        } catch (Exception e) {
+            log.error("Error updating user info: {}", e.getMessage(), e);
+            return CommonResult.failed("系统异常，请稍后再试");
         }
-        return CommonResult.unauthorized(null);
     }
 
     /**
@@ -135,18 +175,29 @@ public class LoginController {
     @PostMapping("/auth/updatePassword")
     @ResponseBody
     public CommonResult<?> updatePassword(@Validated @RequestBody UpdateUserPasswordParam updatePasswordParam, Principal principal) {
-
-        if (principal != null){
+        if (principal == null) {
+            return CommonResult.unauthorized(null);
+        }
+        try {
             String username = principal.getName();
-            // 判断是否是同一用户
-            if (!updatePasswordParam.getUsername().equals(username)){
+            if (!updatePasswordParam.getUsername().equals(username)) {
                 return CommonResult.failed("提交参数不合法");
             }
             int i = userService.updatePassword(updatePasswordParam);
-            if (i > 0){
+            if (i > 0) {
                 return CommonResult.success("ok");
             }
+            return CommonResult.failed("修改密码失败");
+        } catch (Exception e) {
+            log.error("Error updating password: {}", e.getMessage(), e);
+            return CommonResult.failed("系统异常，请稍后再试");
         }
-        return CommonResult.unauthorized(null);
+    }
+
+    private CommonResult<Map<String, String>> buildTokenResponse(String token) {
+        Map<String, String> tokenMap = new HashMap<>(2);
+        tokenMap.put("token", token);
+        tokenMap.put("tokenHead", tokenHead);
+        return CommonResult.success(tokenMap);
     }
 }

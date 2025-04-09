@@ -13,10 +13,8 @@ public class UpdateUserParam {
     @Email
     private String email;
     private String fullName;
-
     private String phone;
     private String avatar;
-
     /**
      * 状态
      */

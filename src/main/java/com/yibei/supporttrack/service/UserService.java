@@ -38,4 +38,6 @@ public interface UserService {
     int restPassword(Integer id);
 
     int updatePassword(UpdateUserPasswordParam updatePasswordParam);
+
+    int changeStatus(UpdateUserParam param);
 }

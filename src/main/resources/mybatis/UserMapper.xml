@@ -7,7 +7,8 @@
         <result column="password_hash" property="passwordHash" jdbcType="VARCHAR"/>
         <result column="email" property="email" jdbcType="VARCHAR"/>
         <result column="full_name" property="fullName" jdbcType="VARCHAR"/>
-        <result column="department_id" property="departmentId" jdbcType="INTEGER"/>
+        <result column="phone" property="phone" jdbcType="VARCHAR"/>
+        <result column="avatar" property="avatar" jdbcType="VARCHAR"/>
         <result column="is_active" property="isActive" jdbcType="BIT"/>
         <result column="created_at" property="createdAt" jdbcType="TIMESTAMP"/>
         <result column="last_login" property="lastLogin" jdbcType="TIMESTAMP"/>

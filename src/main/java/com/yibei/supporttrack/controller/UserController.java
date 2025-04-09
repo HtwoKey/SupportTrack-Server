@@ -108,7 +108,7 @@ public class UserController {
     @PutMapping("/changeStatus")
     @ResponseBody
     public CommonResult<?> updateStatus(@RequestBody UpdateUserParam param) {
-        int count = userService.update(param);
+        int count = userService.changeStatus(param);
         if (count > 0) {
             return CommonResult.success(count);
         }
