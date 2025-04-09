@@ -66,7 +66,8 @@ RoleController {
         if (id == null) {
             return CommonResult.failed("请选择需要删除的角色");
         }
-        List<Integer> ids = List.of(id);
+        List<Integer> ids = new java.util.ArrayList<>();
+        ids.add(id);
         int count = roleService.delete(ids);
         if (count > 0) {
             return CommonResult.success(count);
@@ -79,7 +80,7 @@ RoleController {
      */
     @DeleteMapping("/delete/batch")
     @ResponseBody
-    public CommonResult<?> deleteBatch(@RequestParam("id") List<Integer> ids) {
+    public CommonResult<?> deleteBatch(@RequestParam("ids") List<Integer> ids) {
         if (ids == null || ids.isEmpty()) {
             return CommonResult.failed("请选择需要删除的角色");
         }

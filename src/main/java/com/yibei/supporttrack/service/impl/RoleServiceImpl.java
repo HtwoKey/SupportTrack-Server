@@ -7,6 +7,7 @@ import com.yibei.supporttrack.mapper.RoleMapper;
 import com.yibei.supporttrack.service.RoleService;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -35,6 +36,9 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public int delete(List<Integer> ids) {
+        if (ids.size() == 1) {
+            return roleMapper.deleteById(ids.get(0));
+        }
         return roleMapper.deleteByIds(ids);
     }
 
