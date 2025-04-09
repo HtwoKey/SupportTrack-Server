@@ -1,7 +1,7 @@
-package com.htwokey.geekeradmin.components;
+package com.yibei.supporttrack.components;
 
-import cn.hutool.json.JSONUtil;
-import com.htwokey.geekeradmin.entity.vo.CommonResult;
+import com.alibaba.fastjson.JSONObject;
+import com.yibei.supporttrack.entity.vo.CommonResult;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.core.AuthenticationException;
@@ -24,7 +24,7 @@ public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
         response.setHeader("Cache-Control","no-cache");
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json");
-        response.getWriter().println(JSONUtil.parse(CommonResult.unauthorized(authException.getMessage())));
+        response.getWriter().println(JSONObject.toJSONString(CommonResult.unauthorized(authException.getMessage())));
         response.getWriter().flush();
     }
 }

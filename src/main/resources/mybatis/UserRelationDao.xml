@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yibei.supporttrack.mapper.UserRelationDao">
+
+    <select id="getUserPermissionByUserId" resultType="com.yibei.supporttrack.entity.po.Permission">
+        SELECT
+            p.*
+        FROM
+            permission p
+                LEFT JOIN role_permission_relation rp ON p.id = rp.permission_id
+                LEFT JOIN user_role_relation ur ON ur.role_id = rm.role_id
+        WHERE
+            ur.user_id = #{userId} and p.uri is not null
+    </select>
+</mapper>

@@ -1,6 +1,11 @@
-package com.yibei.supporttrack.entity.result;
+package com.yibei.supporttrack.entity.vo;
 
-public class CommonResult {
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+
+@Data
+public class CommonResult<T> {
     /**
      * 状态码
      */
@@ -124,27 +129,4 @@ public class CommonResult {
         return new CommonResult<T>(ResultCode.Internal_SERVER_ERROR.getCode(), ResultCode.Internal_SERVER_ERROR.getMessage() + message, null);
     }
 
-    public long getCode() {
-        return code;
-    }
-
-    public void setCode(long code) {
-        this.code = code;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public T getData() {
-        return data;
-    }
-
-    public void setData(T data) {
-        this.data = data;
-    }
 }

@@ -1,7 +1,8 @@
-package com.htwokey.geekeradmin.components;
+package com.yibei.supporttrack.components;
 
-import cn.hutool.json.JSONUtil;
-import com.htwokey.geekeradmin.entity.vo.CommonResult;
+
+import com.alibaba.fastjson.JSONObject;
+import com.yibei.supporttrack.entity.vo.CommonResult;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.access.AccessDeniedException;
@@ -26,7 +27,7 @@ public class RestfulAccessDeniedHandler implements AccessDeniedHandler {
         response.setHeader("Cache-Control","no-cache");
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json");
-        response.getWriter().println(JSONUtil.parse(CommonResult.forbidden(e.getMessage())));
+        response.getWriter().println(JSONObject.toJSONString(CommonResult.forbidden(e.getMessage())));
         response.getWriter().flush();
     }
 }
