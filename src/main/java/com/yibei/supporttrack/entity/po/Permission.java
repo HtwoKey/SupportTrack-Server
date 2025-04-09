@@ -13,7 +13,7 @@ import java.util.Date;
 import java.util.List;
 
 @Data
-@TableName("permissions")
+@TableName("permission")
 public class Permission implements Serializable {
 
     @Serial
