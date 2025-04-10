@@ -5,7 +5,9 @@ import lombok.Data;
 @Data
 public class MenuQueryParam {
     private String title;
-    private Integer type;
-    private String startTime;
-    private String endTime;
+    private String name;
+    private Integer isHide;
+    private String permissionName;
+    private Integer pageNum;
+    private Integer pageSize;
 }

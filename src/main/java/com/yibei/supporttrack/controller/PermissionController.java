@@ -2,9 +2,7 @@ package com.yibei.supporttrack.controller;
 
 import com.yibei.supporttrack.entity.dto.MenuQueryParam;
 import com.yibei.supporttrack.entity.po.Permission;
-import com.yibei.supporttrack.entity.vo.CommonResult;
-import com.yibei.supporttrack.entity.vo.RouterVo;
-import com.yibei.supporttrack.entity.vo.TreeSelect;
+import com.yibei.supporttrack.entity.vo.*;
 import com.yibei.supporttrack.service.PermissionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -23,9 +21,9 @@ public class PermissionController {
      */
     @GetMapping("/list")
     @ResponseBody
-    public CommonResult<List<RouterVo>> list(MenuQueryParam menu) {
+    public CommonResult<CommonPage<RouterVo>> list(MenuQueryParam menu) {
         List<Permission> permissions = permissionService.selectPermissionList(menu);
-        return CommonResult.success(permissionService.buildMenus(permissions));
+        return CommonResult.success(CommonPage.restPage(permissionService.buildMenus(permissions)));
     }
 
     /**

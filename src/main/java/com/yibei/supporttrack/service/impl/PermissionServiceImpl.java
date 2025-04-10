@@ -3,6 +3,7 @@ package com.yibei.supporttrack.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.github.pagehelper.PageHelper;
 import com.yibei.supporttrack.entity.dto.MenuQueryParam;
 import com.yibei.supporttrack.entity.po.Permission;
 import com.yibei.supporttrack.entity.po.RolePermissionRelation;
@@ -67,15 +68,20 @@ public class PermissionServiceImpl implements PermissionService {
 
     @Override
     public List<Permission> selectPermissionList(MenuQueryParam menu) {
+        PageHelper.startPage(menu.getPageNum(), menu.getPageSize());
         QueryWrapper<Permission> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("parent_id", 0);
         if (menu.getTitle() != null) {
             queryWrapper.like("title", menu.getTitle());
         }
-        if (menu.getType() != null) {
-            queryWrapper.eq("type", menu.getType());
+        if (menu.getName() != null) {
+            queryWrapper.like("name", menu.getName());
         }
-        if (menu.getStartTime() != null && menu.getEndTime() != null) {
-            queryWrapper.between("create_time", menu.getStartTime(), menu.getEndTime());
+        if (menu.getIsHide() != null) {
+            queryWrapper.eq("is_hide", menu.getIsHide());
+        }
+        if (menu.getPermissionName() != null) {
+            queryWrapper.like("permission_name", menu.getPermissionName());
         }
         queryWrapper.orderByAsc("sort");
         List<Permission> Permissions = permissionMapper.selectList(queryWrapper);
@@ -195,11 +201,12 @@ public class PermissionServiceImpl implements PermissionService {
      * @return String
      */
     public List<Permission> getChildPerms(List<Permission> list, int parentId) {
+        List<Permission> allPermissionList = selectAllPermissionList();
         List<Permission> returnList = new ArrayList<>();
         for (Permission t : list) {
             // 一、根据传入的某个父节点ID,遍历该父节点的所有子节点
             if (t.getParentId() == parentId) {
-                recursionFn(list, t);
+                recursionFn(allPermissionList, t);
                 returnList.add(t);
             }
         }
