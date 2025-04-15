@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -98,6 +99,10 @@ public class PermissionServiceImpl implements PermissionService {
             router.setName(menu.getName());
             router.setPath(menu.getPath());
             router.setComponent(menu.getComponent());
+            router.setPermissionName(menu.getPermissionName());
+            router.setUri(menu.getUri());
+            router.setMethod(menu.getMethod());
+            router.setDescription(menu.getDescription());
             if (menu.getRedirect() != null && !menu.getRedirect().isEmpty()) {
                 router.setRedirect(menu.getRedirect());
             }
@@ -115,6 +120,7 @@ public class PermissionServiceImpl implements PermissionService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public int addPermission(Permission permission) {
+        permission.setCreateTime(new Date());
         return permissionMapper.insert(permission);
     }
 

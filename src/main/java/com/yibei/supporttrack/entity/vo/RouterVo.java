@@ -43,4 +43,24 @@ public class RouterVo {
      */
     private List<RouterVo> children;
 
+    /**
+     * 名称
+     */
+    private String permissionName;
+
+    /**
+     * 资源路径
+     */
+    private String uri;
+
+    /**
+     * 请求方式
+     */
+    private String method;
+
+    /**
+     * 说明
+     */
+    private String description;
+
 }
