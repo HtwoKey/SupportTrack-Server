@@ -24,4 +24,10 @@ public class RolePermissionRelation implements Serializable {
     private Integer permissionId;
     private Date grantedAt;
 
+    public RolePermissionRelation(Integer roleId, Integer permissionId, Date grantedAt) {
+        this.roleId = roleId;
+        this.permissionId = permissionId;
+        this.grantedAt = grantedAt;
+    }
+
 }

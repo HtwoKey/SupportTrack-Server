@@ -1,12 +1,14 @@
 package com.yibei.supporttrack.controller;
 
 import com.yibei.supporttrack.entity.po.Role;
+import com.yibei.supporttrack.entity.po.RolePermissionRelation;
 import com.yibei.supporttrack.entity.vo.CommonPage;
 import com.yibei.supporttrack.entity.vo.CommonResult;
 import com.yibei.supporttrack.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -85,6 +87,38 @@ RoleController {
             return CommonResult.failed("请选择需要删除的角色");
         }
         int count = roleService.delete(ids);
+        if (count > 0) {
+            return CommonResult.success(count);
+        }
+        return CommonResult.failed();
+    }
+
+    /**
+     * 获取角色菜单
+     */
+    @GetMapping("/menu/{roleId}")
+    @ResponseBody
+    public CommonResult<?> getMenuList(@PathVariable Integer roleId) {
+        List<RolePermissionRelation> menuList = roleService.getRolePermissionRelationList(roleId);
+        List<Integer> idList = new ArrayList<>();
+        for ( RolePermissionRelation menu: menuList){
+            int id  = menu.getId();
+            idList.add(id);
+        }
+        return CommonResult.success(idList);
+    }
+
+    /**
+     * 设置角色菜单
+     */
+    @PostMapping("/menu/set")
+    @ResponseBody
+    public CommonResult<?> allocMenu(@RequestParam("roleId") Integer roleId,
+                                     @RequestParam("menuIds") List<Integer> menuIds) {
+        if (roleId == null || menuIds == null) {
+            return CommonResult.failed("请选择需要分配的菜单");
+        }
+        int count = roleService.setRolePermissionRelation(roleId, menuIds);
         if (count > 0) {
             return CommonResult.success(count);
         }
